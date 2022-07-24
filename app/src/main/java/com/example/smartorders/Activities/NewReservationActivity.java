@@ -147,17 +147,34 @@ public class NewReservationActivity extends AppCompatActivity implements Adapter
                                 // getting the instance from the db
                                 Object value = snapshot.getValue();
 
-                                HashMap<String, String> hash = (HashMap<String, String>) value;
+                                HashMap<String, String> orderMap = (HashMap<String, String>) value;
                                 String amountOfPeople = "0";
-                                amountOfPeople = hash.get("amountOfPeople");
-                                int newAmount = Integer.parseInt(amountOfAttendeds.getText().toString()) + Integer.parseInt(amountOfPeople);
+                                amountOfPeople = orderMap.get("amountOfPeople");
+                                User userLogged = User.getInstance();
+                                HashMap<String, String> reservations = userLogged.getReservations();
+                                int newAmount = Integer.parseInt(amountOfAttendeds.getText().toString()) + Integer.parseInt(amountOfPeople);;
+                                int numOfReservations=Integer.parseInt(orderMap.get("amountOfReservation"));
+                                if (!reservations.containsKey(fullDateWithTimeStamp)){
+                                    //new reservation
+                                    numOfReservations+=1;
+                                }
+                                else{
+                                    //update existing reservation
+                                    newAmount-=Integer.parseInt(reservations.get(fullDateWithTimeStamp));
+                                }
+
+
 
                                 if (newAmount > 50) { // restaurant full
                                     startActivity(new Intent(getApplicationContext(), SuccessFailureActivity.class).putExtra("IsComplete", "false"));
                                 } else { // reservation can be saved
-                                    User userLogged = User.getInstance();
-                                    HashMap<String, String> reservations = userLogged.getReservations();
-                                    reservations.put(fullDateWithTimeStamp, newAmount+"");
+
+                                    orderMap.put("amountOfPeople",newAmount+"");
+                                    orderMap.put("amountOfReservation",numOfReservations+"");
+                                    reference.child(fullDateWithTimeStamp)
+                                            .setValue(orderMap);
+
+                                    reservations.put(fullDateWithTimeStamp, amountOfAttendeds.getText().toString());
                                     FirebaseDatabase.getInstance().getReference("Users")
                                             .child(user.getUid())
                                             .setValue(userLogged).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -166,6 +183,7 @@ public class NewReservationActivity extends AppCompatActivity implements Adapter
 
                                                 }
                                             });
+
                                     startActivity(new Intent(getApplicationContext(), SuccessFailureActivity.class).putExtra("IsComplete", "true"));
                                 }
 
