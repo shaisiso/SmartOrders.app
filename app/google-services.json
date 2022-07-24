@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "211841350276",
+    "firebase_url": "https://smart-orders-b3979-default-rtdb.firebaseio.com",
+    "project_id": "smart-orders-b3979",
+    "storage_bucket": "smart-orders-b3979.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:211841350276:android:5d97efa67ae0c1412a60d1",
+        "android_client_info": {
+          "package_name": "com.example.smartord"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "211841350276-1lpsm18kl4nfqumb9dubibf7nkjq18s1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtDLXmpwnVkcgtGZ6HF0l2eBn8Vz5OGng"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "211841350276-1lpsm18kl4nfqumb9dubibf7nkjq18s1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:211841350276:android:d76911079fcddaf92a60d1",
+        "android_client_info": {
+          "package_name": "com.example.smartorders"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "211841350276-1lpsm18kl4nfqumb9dubibf7nkjq18s1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtDLXmpwnVkcgtGZ6HF0l2eBn8Vz5OGng"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "211841350276-1lpsm18kl4nfqumb9dubibf7nkjq18s1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
