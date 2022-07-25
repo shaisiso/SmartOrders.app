@@ -23,7 +23,7 @@ import com.example.smartorders.Classes.Order;
 import com.example.smartorders.Classes.User;
 import com.example.smartorders.Dialog.DialogFragment;
 import com.example.smartorders.ForeGround.Service;
-import com.example.smartorders.Modal.OrderViewModal;
+import com.example.smartorders.Modal.OrderViewModel;
 import com.example.smartorders.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,7 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class HomePageActivity extends AppCompatActivity implements DialogFragment.OnInputListener {
-    private OrderViewModal orderViewModal;
+    private OrderViewModel orderViewModel;
     private FirebaseUser user;
     private DatabaseReference reference;
     private Button newRes;
@@ -64,8 +64,8 @@ public class HomePageActivity extends AppCompatActivity implements DialogFragmen
 
         // register broadcast receiver
         IntentFilter broad = new IntentFilter("Broad");
-        orderViewModal = new ViewModelProvider(this).get(OrderViewModal.class);
-        LiveData<List<Order>> orderList = orderViewModal.getOrderList();
+        orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
+        LiveData<List<Order>> orderList = orderViewModel.getOrderList();
         broadCastRec = new BroadCastRec(orderList);
         registerReceiver(broadCastRec, broad);
 
@@ -174,4 +174,5 @@ public class HomePageActivity extends AppCompatActivity implements DialogFragmen
         }
         return false;
     }
+
 }

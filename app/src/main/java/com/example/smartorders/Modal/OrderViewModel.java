@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class OrderViewModal extends ViewModel {
+public class OrderViewModel extends ViewModel {
 
 
     private DatabaseReference reference;
@@ -84,17 +84,29 @@ public class OrderViewModal extends ViewModel {
             List<Order> orders = new ArrayList<>(mutableLiveData.getValue());
             Order orderToDelete = orders.get(position);
             String orderDate = orderToDelete.getOrderDate().split("T")[0];
+            int orderHour = Integer.parseInt(orderToDelete.getOrderDate().split("T")[1]);
             String[] splitted = orderDate.split("-");
+            int requestedDay = Integer.parseInt(splitted[0]);
+            int requestedMonth = Integer.parseInt(splitted[1]);
+            int requestedYear = Integer.parseInt(splitted[2]);
+
             LocalDateTime timeNow = LocalDateTime.now();
             int currentYear = timeNow.getYear();
             int currentMonth = timeNow.getMonth().getValue();
             int currentDay = timeNow.getDayOfMonth();
-            if ((currentYear > Integer.valueOf(splitted[2]))) { // if year is smaller  continue
+            int currentHour = timeNow.getHour();
+            if (requestedYear < currentYear) { // if year is smaller  continue
                 return false;
-            } else if ((currentMonth > Integer.valueOf(splitted[1]))) { // if month is smaller continue
-                return false;
-            } else if ((currentDay > Integer.valueOf(splitted[0]))) {
-                return false;
+            } else if (requestedYear == currentYear) {
+                if (requestedMonth < currentMonth) { // if month is smaller continue
+                    return false;
+                } else if (requestedMonth == currentMonth) {
+                    if (requestedDay < currentDay) {
+                        return false;
+                    } else if (requestedDay == currentDay && orderHour <= currentHour) {
+                        return false;
+                    }
+                }
             }
 
             orders.remove(position);

@@ -97,15 +97,16 @@ public class Service extends android.app.Service {
                     String orderDate = order.getOrderDate();
                     String[] timeSplit = orderDate.split("T");
                     String orderDateSplit = timeSplit[0];
-                    String hoursTimeSplit = timeSplit[1];
+                    int orderHour = Integer.parseInt(timeSplit[1]);
                     int currentDay = timeNow.getDayOfMonth();
                     int currentMonth = timeNow.getMonth().getValue();
                     int currentYear = timeNow.getYear();
                     int currentHour = timeNow.getHour();
                     // orderDate split : dd-MM-yyyy
                     String[] splitDate = orderDateSplit.split("-");
+
                     if (currentDay == Integer.parseInt(splitDate[0]) && currentMonth == Integer.parseInt(splitDate[1]) && currentYear == Integer.parseInt(splitDate[2])) {
-                        if (Integer.parseInt(hoursTimeSplit) - 3 == currentHour) {
+                        if (orderHour>= currentHour && orderHour<= currentHour+3) {
                             alreadyNotified.add(order);
                             return order;
                         }
