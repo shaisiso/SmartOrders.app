@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.smartorders.Adapter.OrderAdapter;
 import com.example.smartorders.Classes.Order;
 import com.example.smartorders.Dialog.DialogFragment;
-import com.example.smartorders.Modal.OrderViewModel;
+import com.example.smartorders.ViewModel.OrderViewModel;
 import com.example.smartorders.R;
 
 import java.util.List;

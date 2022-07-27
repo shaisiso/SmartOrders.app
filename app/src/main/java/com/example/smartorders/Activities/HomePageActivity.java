@@ -23,7 +23,7 @@ import com.example.smartorders.Classes.Order;
 import com.example.smartorders.Classes.User;
 import com.example.smartorders.Dialog.DialogFragment;
 import com.example.smartorders.ForeGround.Service;
-import com.example.smartorders.Modal.OrderViewModel;
+import com.example.smartorders.ViewModel.OrderViewModel;
 import com.example.smartorders.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

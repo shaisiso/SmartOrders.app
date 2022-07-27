@@ -1,4 +1,4 @@
-package com.example.smartorders.Modal;
+package com.example.smartorders.ViewModel;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;

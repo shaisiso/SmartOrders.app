@@ -4,10 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +26,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.smartorders.Broadcast.RemindertBroadcast;
 import com.example.smartorders.Classes.DbOrder;
 import com.example.smartorders.Classes.Order;
 import com.example.smartorders.Classes.User;
@@ -35,6 +42,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -183,6 +191,8 @@ public class NewReservationActivity extends AppCompatActivity implements Adapter
 
                                                 }
                                             });
+                                    createNotificationChannel();
+                                    setAlarmReminder(day,month,year,Integer.parseInt(timeFetched));
 
                                     startActivity(new Intent(getApplicationContext(), SuccessFailureActivity.class).putExtra("IsComplete", "true"));
                                 }
@@ -214,6 +224,8 @@ public class NewReservationActivity extends AppCompatActivity implements Adapter
                                                                     public void onComplete(@NonNull Task<Void> task) {
                                                                     }
                                                                 });
+                                                        createNotificationChannel();
+                                                        setAlarmReminder(day,month,year,Integer.parseInt(timeFetched));
 
                                                         startActivity(new Intent(getApplicationContext(), SuccessFailureActivity.class).putExtra("IsComplete", "true"));
                                                     }
@@ -238,21 +250,64 @@ public class NewReservationActivity extends AppCompatActivity implements Adapter
         });
     }
 
+    private void setAlarmReminder(int day,int month,int year,int hour) {
+        // set alarm manager for timed notification
+        Context context = getApplicationContext();
+        Intent intent =new Intent(context, RemindertBroadcast.class);
+        intent.setAction("Reminder");
+        intent.putExtra("Message", "This is a reminder for your reservation today at "
+                +hour+":00 for "+amountOfAttendeds.getText().toString()+" people.");
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,hour,intent,PendingIntent.FLAG_IMMUTABLE);
+        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+
+        Calendar myAlarmDate = Calendar.getInstance();
+        myAlarmDate.set(year,month-1,day,hour,0);
+        long timeOfReservation = myAlarmDate.getTimeInMillis();
+        long time3HoursMs = 3*3600* 1000;
+
+        alarmManager.set(AlarmManager.RTC_WAKEUP, timeOfReservation-time3HoursMs,pendingIntent);
+    }
+
+    private void createNotificationChannel(){
+        if (Build.VERSION.SDK_INT >Build.VERSION_CODES.O){
+            CharSequence name = "ReminderChannel";
+            String description = "Channel for reservation reminder";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("notifyReservation",name,importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+
+        }
+    }
+
     private boolean isValidDate() {
+        String[] splitted = dateFetched.split("-"); // date format : dd-mm-yyyy
+        int requestedDay = Integer.parseInt(splitted[0]);
+        int requestedMonth = Integer.parseInt(splitted[1]);
+        int requestedYear = Integer.parseInt(splitted[2]);
+        int orderHour = Integer.parseInt(timeFetched);
         LocalDateTime timeNow = LocalDateTime.now();
         int currentYear = timeNow.getYear();
         int currentMonth = timeNow.getMonth().getValue();
         int currentDay = timeNow.getDayOfMonth();
         //
         int currentHour = timeNow.getHour();
-        String[] splitted = dateFetched.split("-"); // date format : dd-mm-yyyy
-        return (currentYear <= Integer.valueOf(splitted[2])
-                && currentMonth <= Integer.valueOf(splitted[1])
-                && currentDay < Integer.valueOf(splitted[0]))
-                || (currentYear == Integer.valueOf(splitted[2])
-                && currentMonth == Integer.valueOf(splitted[1])
-                && currentDay == Integer.valueOf(splitted[0])
-                && currentHour< Integer.parseInt(timeFetched.split(":")[0]));
+        if (requestedYear < currentYear) { // if year is smaller  continue
+            return false;
+        } else if (requestedYear == currentYear) {
+            if (requestedMonth < currentMonth) { // if month is smaller continue
+                return false;
+            } else if (requestedMonth == currentMonth) {
+                if (requestedDay < currentDay) {
+                    return false;
+                } else if (requestedDay == currentDay && orderHour <= currentHour) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
 
