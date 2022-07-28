@@ -225,12 +225,9 @@ public class NewReservationActivity extends AppCompatActivity implements Adapter
                                                                     }
                                                                 });
                                                         createNotificationChannel();
-                                                        setAlarmReminder(day,month,year,Integer.parseInt(timeFetched));
-
+                                                        setAlarmReminder(day, month, year, Integer.parseInt(timeFetched));
                                                         startActivity(new Intent(getApplicationContext(), SuccessFailureActivity.class).putExtra("IsComplete", "true"));
                                                     }
-
-
                                                 }
                                             }
                                         });
@@ -261,11 +258,9 @@ public class NewReservationActivity extends AppCompatActivity implements Adapter
         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
 
         Calendar myAlarmDate = Calendar.getInstance();
-        myAlarmDate.set(year,month-1,day,hour,0);
-        long timeOfReservation = myAlarmDate.getTimeInMillis();
-        long time3HoursMs = 3*3600* 1000;
-
-        alarmManager.set(AlarmManager.RTC_WAKEUP, timeOfReservation-time3HoursMs,pendingIntent);
+        myAlarmDate.set(year,month,day,hour-3,0);
+        long alarmTime = myAlarmDate.getTimeInMillis();
+        alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime,pendingIntent);
     }
 
     private void createNotificationChannel(){
