@@ -140,7 +140,7 @@ public class SignUpActivity extends AppCompatActivity {
                         }
                     });
                 }else{
-                    Toast toast = Toast.makeText(getApplicationContext(), "There was an error while trying to create the user", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getApplicationContext(), "Could not create new user. Try different mail.", Toast.LENGTH_SHORT);
                     toast.show();
                 }
             }

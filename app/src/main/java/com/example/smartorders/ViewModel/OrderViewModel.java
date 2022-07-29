@@ -64,6 +64,7 @@ public class OrderViewModel extends ViewModel {
                                 }
                             }
                         }
+                        ordersList.sort(Order::compareTo);
                         mutableLiveData.setValue(ordersList);
                     }
 

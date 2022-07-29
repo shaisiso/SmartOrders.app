@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="50dp"
     android:layout_marginTop="7px">
@@ -20,7 +21,7 @@
         android:text="date"
 
         android:textColor="@color/black"
-        android:textSize="20dp"
+        android:textSize="20sp"
 
         />
 
@@ -33,7 +34,7 @@
         android:layout_marginTop="10dp"
         android:text="time"
         android:textColor="@color/black"
-        android:textSize="20dp"
+        android:textSize="20sp"
 
         />
 
@@ -45,7 +46,7 @@
         android:layout_marginTop="10dp"
         android:text="num"
         android:textColor="@color/black"
-        android:textSize="20dp" />
+        android:textSize="20sp" />
 
     <ImageButton
         android:id="@+id/deleteBtn"
@@ -53,6 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="360dp"
         android:layout_marginTop="12dp"
-        android:background="@drawable/delete_item" />
+        android:background="@drawable/delete_item"
+        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
 </FrameLayout>

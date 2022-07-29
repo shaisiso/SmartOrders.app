@@ -41,8 +41,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -115,7 +117,8 @@ public class NewReservationActivity extends AppCompatActivity implements Adapter
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 month = month + 1;
-                String date = dayOfMonth + "-" + month + "-" + year;
+                String strMonth = month < 10 ? "0"+month : month+"";
+                String date = dayOfMonth + "-" + strMonth + "-" + year;
                 Log.i("Date", date);
                 dateFetched = date;
                 chooseDateTV.setText(dateFetched);
@@ -257,10 +260,15 @@ public class NewReservationActivity extends AppCompatActivity implements Adapter
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,hour,intent,PendingIntent.FLAG_IMMUTABLE);
         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
 
-        Calendar myAlarmDate = Calendar.getInstance();
-        myAlarmDate.set(year,month,day,hour-3,0);
-        long alarmTime = myAlarmDate.getTimeInMillis();
-        alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime,pendingIntent);
+        String strHour =hour -3 <10 ? "0"+( hour -3) : (hour -3)+"";
+        String ds = dateFetched+" "+strHour+":00";
+        LocalDateTime alertTime = LocalDateTime.parse(ds, DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
+        LocalDateTime now = LocalDateTime.now();
+        Duration duration = Duration.between(now, alertTime);
+        long diff = Math.abs(duration.toMillis());
+        long timeNow = System.currentTimeMillis();
+        long timeToDate = now.compareTo(alertTime) < 0 ? timeNow+diff : timeNow;
+        alarmManager.set(AlarmManager.RTC_WAKEUP, timeToDate,pendingIntent);
     }
 
     private void createNotificationChannel(){
