@@ -7,6 +7,11 @@
         android:title="Settings"
         app:showAsAction="never" />
     <item
+        android:id="@+id/logoutItem"
+        android:icon="@drawable/common_google_signin_btn_icon_light"
+        android:title="Logout"
+        app:showAsAction="never"/>
+    <item
         android:id="@+id/exitItem"
         android:icon="@drawable/common_google_signin_btn_icon_light"
         android:title="Exit"

@@ -116,12 +116,8 @@ public class HomePageActivity extends AppCompatActivity implements DialogFragmen
 
 
         // show all reservations btn clicked
-        allRes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getBaseContext(), MyReservationsActivity.class));
-            }
-        });
+        allRes.setOnClickListener(v -> startActivity(new Intent(getBaseContext(),
+                MyReservationsActivity.class)));
 
     }
 
@@ -142,13 +138,21 @@ public class HomePageActivity extends AppCompatActivity implements DialogFragmen
                 startActivity(intent);
                 break;
 
+            case R.id.logoutItem:
+                FragmentManager fm1 = getSupportFragmentManager();
+                DialogFragment dialogFragment1 = new DialogFragment();
+                Bundle args1 = new Bundle();
+                args1.putString("Type", "Logout");
+                dialogFragment1.setArguments(args1);
+                dialogFragment1.show(fm1, "Custom");
+                break;
             case R.id.exitItem:
-                FragmentManager fm = getSupportFragmentManager();
-                DialogFragment dialogFragment = new DialogFragment();
-                Bundle args = new Bundle();
-                args.putString("Type", "Exit");
-                dialogFragment.setArguments(args);
-                dialogFragment.show(fm, "Custom");
+                FragmentManager fm2 = getSupportFragmentManager();
+                DialogFragment dialogFragment2 = new DialogFragment();
+                Bundle args2 = new Bundle();
+                args2.putString("Type", "Exit");
+                dialogFragment2.setArguments(args2);
+                dialogFragment2.show(fm2, "Custom");
                 break;
         }
 
@@ -159,8 +163,8 @@ public class HomePageActivity extends AppCompatActivity implements DialogFragmen
     @Override
     public void sendInput(String input, int position) {
         if (input == "YES") {
-            finish();
             FirebaseAuth.getInstance().signOut();
+            finish();
         }
     }
 

@@ -32,20 +32,18 @@ public class Order implements Comparable<Order>{
 
     public void setAttendsNumber(String attendsNumber) { this.attendsNumber = attendsNumber; }
 
-
-
-
     @Override
     public int compareTo(Order order) {
-        //String strHour =hour -3 <10 ? "0"+( hour -3) : (hour -3)+"";
-        String d1Splited []= this.getOrderDate().split("T");
-        String d2Splited []= order.getOrderDate().split("T");
+        LocalDateTime thisOrderDate =  getOrderLocalDate(this);
+        LocalDateTime otherOrderDate =  getOrderLocalDate(order);
+        return thisOrderDate.compareTo(otherOrderDate);
+    }
 
-        String d1 = d1Splited[0]+" "+d1Splited[1]+":00";
-        String d2 = d2Splited[0]+" "+d2Splited[1]+":00";
-
-        LocalDateTime order1Date = LocalDateTime.parse(d1, DateTimeFormatter.ofPattern("d-M-yyyy HH:mm"));
-        LocalDateTime order2Date = LocalDateTime.parse(d2, DateTimeFormatter.ofPattern("d-M-yyyy HH:mm"));
-        return order1Date.compareTo(order2Date);
+    public LocalDateTime getOrderLocalDate(Order order){
+        String dateSplited []= order.getOrderDate().split("T");
+        String dateFormated = dateSplited[0]+" "+dateSplited[1]+":00";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d-M-yyyy HH:mm");
+        LocalDateTime orderLocalDate = LocalDateTime.parse(dateFormated, formatter);
+        return orderLocalDate;
     }
 }

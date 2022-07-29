@@ -23,7 +23,7 @@ public class DialogFragment extends androidx.fragment.app.DialogFragment {
         super.onCreate(savedInstanceState);
 
         action = getArguments().getString("Type");
-        if (action == "Delete") {
+        if (action.equals("Delete")) {
             position = getArguments().getInt("position");
         } else {
             position = -1;
@@ -58,43 +58,38 @@ public class DialogFragment extends androidx.fragment.app.DialogFragment {
         text = view.findViewById(R.id.dialogText);
         submit = view.findViewById(R.id.okBtn);
         cancel = view.findViewById(R.id.cancelBtn);
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        cancel.setOnClickListener(v -> {
 
-            }
         });
         if (action == "Delete") {
             title.setText("Delete reservation");
             text.setText("Are you sure you want to delete the reservation?");
             submit.setText("Delete");
-            submit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onInputListener.sendInput("YES", position);
-                    dismiss();
-                }
+            submit.setOnClickListener(v -> {
+                onInputListener.sendInput("YES", position);
+                dismiss();
             });
-        } else if (action == "Exit") {
-            title.setText("Exit Application");
-            text.setText("Are you sure you want to Exit the application?");
-            submit.setText("Exit");
-            submit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onInputListener.sendInput("YES", position);
-                    dismiss();
+        } else if (action.equals("Logout")) {
+            title.setText("Logout Application");
+            text.setText("Are you sure you want to Logout?");
+            submit.setText("Logout");
+            submit.setOnClickListener(v -> {
+                onInputListener.sendInput("YES", position);
+                dismiss();
 
-                }
+            });
+        }else if (action.equals("Exit")) {
+            title.setText("Close Application");
+            text.setText("Are you sure you want to close the application?");
+            submit.setText("Exit");
+            submit.setOnClickListener(v -> {
+                System.exit(1);
             });
         }
 
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onInputListener.sendInput("NO", position);
-                dismiss();
-            }
+        cancel.setOnClickListener(v -> {
+            onInputListener.sendInput("NO", position);
+            dismiss();
         });
 
         return view;

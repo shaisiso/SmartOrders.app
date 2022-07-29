@@ -1,6 +1,7 @@
 package com.example.smartorders.Activities;
 
 import android.os.Bundle;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -24,7 +25,7 @@ public class MyReservationsActivity extends AppCompatActivity implements OrderAd
     private RecyclerView recyclerView;
     private OrderAdapter orderAdapter;
     private ActionBar actionBar;
-
+    private Switch orderSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,20 +40,23 @@ public class MyReservationsActivity extends AppCompatActivity implements OrderAd
         actionBar.setDisplayShowHomeEnabled(true);
 
         recyclerView = findViewById(R.id.recycleView);
-
+        orderSwitch = findViewById(R.id.orderSwitch);
         // register the recycle view adapter
-        orderAdapter = new OrderAdapter(Order.itemCallback, this, getSupportFragmentManager());
+        orderAdapter = new OrderAdapter(Order.itemCallback, this, getSupportFragmentManager(),
+                orderSwitch.isChecked());
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(orderAdapter);
-
         // get view model instance -> pass list of reservations to recycle view adapter
         orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
-        orderViewModel.getOrderList().observe(this, new Observer<List<Order>>() {
-            @Override
-            public void onChanged(List<Order> orders) {
-                orderAdapter.submitList(orders);
-            }
+        orderViewModel.getOrderList().observe(this, orders -> orderAdapter.submitList(orders));
+
+        orderSwitch.setOnClickListener(view -> {
+            if(orderSwitch.isChecked())
+                orderViewModel.sortUp();
+            else
+                orderViewModel.sortDown();
         });
+
     }
 
     // implementation of the recycle view interface (OrderClickInterface)

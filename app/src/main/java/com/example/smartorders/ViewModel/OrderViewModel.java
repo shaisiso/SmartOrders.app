@@ -28,9 +28,8 @@ public class OrderViewModel extends ViewModel {
     private MutableLiveData<List<Order>> mutableLiveData;
     private User userRef;
     private String userId;
-
+    boolean dateAscending=true;
     public LiveData<List<Order>> getOrderList() {
-
         if (mutableLiveData == null) {
             user = FirebaseAuth.getInstance().getCurrentUser();
             userId = user.getUid();
@@ -64,7 +63,13 @@ public class OrderViewModel extends ViewModel {
                                 }
                             }
                         }
-                        ordersList.sort(Order::compareTo);
+                        //if(dateAscending)
+                            ordersList.sort(Order::compareTo);
+//                        else{
+//                            ordersList.sort((o1, o2) -> o1.compareTo(o2) * (-1));
+//                        }
+                        //ordersList.sort((o1,o2)-> o1.compareTo(o2)*(-1));
+
                         mutableLiveData.setValue(ordersList);
                     }
 
@@ -78,6 +83,20 @@ public class OrderViewModel extends ViewModel {
         }
 
         return mutableLiveData;
+    }
+
+    public void sortUp() {
+        dateAscending =false;
+        List<Order> orders = new ArrayList<>(mutableLiveData.getValue());
+        orders.sort((o1, o2) -> o1.compareTo(o2) * (-1));
+        mutableLiveData.setValue(orders);
+    }
+
+    public void sortDown() {
+        dateAscending =true;
+        List<Order> orders = new ArrayList<>(mutableLiveData.getValue());
+        orders.sort(Order::compareTo);
+        mutableLiveData.setValue(orders);
     }
 
     public boolean deleteOrder(int position) {
