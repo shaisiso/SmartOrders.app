@@ -89,6 +89,11 @@ public class SignUpActivity extends AppCompatActivity {
             toast.show();
             return;
         }
+        if (phoneNumber.length()!=10) {
+            Toast toast = Toast.makeText(getApplicationContext(), "Phone number needs to be 10 figures", Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
 
         if (email.isEmpty()) {
             Toast toast = Toast.makeText(getApplicationContext(), "Email is empty", Toast.LENGTH_SHORT);
@@ -108,7 +113,7 @@ public class SignUpActivity extends AppCompatActivity {
         }
         if (password.length() < 6) {
 
-            Toast toast = Toast.makeText(getApplicationContext(), "Password is too short", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(getApplicationContext(), "Password need to be at least 6 characters", Toast.LENGTH_SHORT);
             toast.show();
             return;
         }

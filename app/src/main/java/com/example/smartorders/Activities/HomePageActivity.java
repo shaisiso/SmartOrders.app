@@ -4,7 +4,11 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Process;
+import android.os.StrictMode;
+import android.util.CloseGuard;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,6 +31,7 @@ import com.example.smartorders.ForeGround.Service;
 import com.example.smartorders.ViewModel.OrderViewModel;
 import com.example.smartorders.R;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -35,6 +40,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Closeable;
 import java.util.HashMap;
 import java.util.List;
 
@@ -140,14 +146,6 @@ public class HomePageActivity extends AppCompatActivity implements DialogFragmen
                 args1.putString("Type", "Logout");
                 dialogFragment1.setArguments(args1);
                 dialogFragment1.show(fm1, "Custom");
-                break;
-            case R.id.exitItem:
-                FragmentManager fm2 = getSupportFragmentManager();
-                DialogFragment dialogFragment2 = new DialogFragment();
-                Bundle args2 = new Bundle();
-                args2.putString("Type", "Exit");
-                dialogFragment2.setArguments(args2);
-                dialogFragment2.show(fm2, "Custom");
                 break;
         }
 

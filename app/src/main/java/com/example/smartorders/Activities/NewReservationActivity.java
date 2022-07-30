@@ -76,7 +76,6 @@ public class NewReservationActivity extends AppCompatActivity implements Adapter
         actionBar.setDisplayShowHomeEnabled(true);
 
         // find views from layout xml
-//        chooseDateTV = findViewById(R.id.dateChosenET);
         chooseDateBtn = findViewById(R.id.chooseDateBtn);
         submitBtn = findViewById(R.id.submitReservationBtn);
         amountOfAttendeds = findViewById(R.id.numberOfPeopleET);
@@ -112,19 +111,14 @@ public class NewReservationActivity extends AppCompatActivity implements Adapter
             }
         });
 
-
-        setListener = new DatePickerDialog.OnDateSetListener() { // date picked listener
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                month = month + 1;
-                String strMonth = month < 10 ? "0"+month : month+"";
-                String date = dayOfMonth + "-" + strMonth + "-" + year;
-                Log.i("Date", date);
-                dateFetched = date;
-             //   chooseDateTV.setText(dateFetched);
-                chooseDateBtn.setText(dateFetched);
-
-            }
+        // date picked listener
+        setListener = (view, year1, month1, dayOfMonth) -> {
+            month1 = month1 + 1;
+            String strMonth = month1 < 10 ? "0"+ month1 : month1 +"";
+            String date = dayOfMonth + "-" + strMonth + "-" + year1;
+            Log.i("Date", date);
+            dateFetched = date;
+            chooseDateBtn.setText(dateFetched);
         };
 
 
@@ -137,116 +131,113 @@ public class NewReservationActivity extends AppCompatActivity implements Adapter
          *  - show the correct fragment (if yes or no)
          *
          */
-        submitBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // create the string from date and time
-                StringBuilder sb = new StringBuilder();
+        submitBtn.setOnClickListener(v -> {
+            // create the string from date and time
+            StringBuilder sb = new StringBuilder();
 
-                if (null == dateFetched || timeFetched.equals("Select") || amountOfAttendeds.getText().toString().isEmpty()) { // check validty
-                    Toast toast = Toast.makeText(getApplicationContext(), "One of the fields is empty!!", Toast.LENGTH_SHORT);
-                    toast.show();
-                } else if (isValidDate()) {
-                    sb.append(dateFetched).append("T").append(timeFetched);
-                    fullDateWithTimeStamp = sb.toString();
+            if (null == dateFetched || timeFetched.equals("Select") || amountOfAttendeds.getText().toString().isEmpty()) { // check validty
+                Toast toast = Toast.makeText(getApplicationContext(), "One of the fields is empty!!", Toast.LENGTH_SHORT);
+                toast.show();
+            } else if (isValidDate()) {
+                sb.append(dateFetched).append("T").append(timeFetched);
+                fullDateWithTimeStamp = sb.toString();
 
 
-                    // check in db
-                    reference.child(fullDateWithTimeStamp).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists()) { // there is  a reservation for the specific time and date
-                                // getting the instance from the db
-                                Object value = snapshot.getValue();
+                // check in db
+                reference.child(fullDateWithTimeStamp).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) { // there is  a reservation for the specific time and date
+                            // getting the instance from the db
+                            Object value = snapshot.getValue();
 
-                                HashMap<String, String> orderMap = (HashMap<String, String>) value;
-                                String amountOfPeople = "0";
-                                amountOfPeople = orderMap.get("amountOfPeople");
-                                User userLogged = User.getInstance();
-                                HashMap<String, String> reservations = userLogged.getReservations();
-                                int newAmount = Integer.parseInt(amountOfAttendeds.getText().toString()) + Integer.parseInt(amountOfPeople);;
-                                int numOfReservations=Integer.parseInt(orderMap.get("amountOfReservation"));
-                                if (!reservations.containsKey(fullDateWithTimeStamp)){
-                                    //new reservation
-                                    numOfReservations+=1;
-                                }
-                                else{
-                                    //update existing reservation
-                                    newAmount-=Integer.parseInt(reservations.get(fullDateWithTimeStamp));
-                                }
+                            HashMap<String, String> orderMap = (HashMap<String, String>) value;
+                            String amountOfPeople = "0";
+                            amountOfPeople = orderMap.get("amountOfPeople");
+                            User userLogged = User.getInstance();
+                            HashMap<String, String> reservations = userLogged.getReservations();
+                            int newAmount = Integer.parseInt(amountOfAttendeds.getText().toString()) + Integer.parseInt(amountOfPeople);;
+                            int numOfReservations=Integer.parseInt(orderMap.get("amountOfReservation"));
+                            if (!reservations.containsKey(fullDateWithTimeStamp)){
+                                //new reservation
+                                numOfReservations+=1;
+                            }
+                            else{
+                                //update existing reservation
+                                newAmount-=Integer.parseInt(reservations.get(fullDateWithTimeStamp));
+                            }
 
 
 
-                                if (newAmount > 50) { // restaurant full
-                                    startActivity(new Intent(getApplicationContext(), SuccessFailureActivity.class).putExtra("IsComplete", "false"));
-                                } else { // reservation can be saved
+                            if (newAmount > 50) { // restaurant full
+                                startActivity(new Intent(getApplicationContext(), SuccessFailureActivity.class).putExtra("IsComplete", "false"));
+                            } else { // reservation can be saved
 
-                                    orderMap.put("amountOfPeople",newAmount+"");
-                                    orderMap.put("amountOfReservation",numOfReservations+"");
-                                    reference.child(fullDateWithTimeStamp)
-                                            .setValue(orderMap);
+                                orderMap.put("amountOfPeople",newAmount+"");
+                                orderMap.put("amountOfReservation",numOfReservations+"");
+                                reference.child(fullDateWithTimeStamp)
+                                        .setValue(orderMap);
 
-                                    reservations.put(fullDateWithTimeStamp, amountOfAttendeds.getText().toString());
-                                    FirebaseDatabase.getInstance().getReference("Users")
-                                            .child(user.getUid())
-                                            .setValue(userLogged).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-
-                                                }
-                                            });
-                                    createNotificationChannel();
-                                    setAlarmReminder(day,month,year,Integer.parseInt(timeFetched));
-
-                                    startActivity(new Intent(getApplicationContext(), SuccessFailureActivity.class).putExtra("IsComplete", "true"));
-                                }
-
-
-                            } else { // first reservation for that date
-                                DbOrder order = new DbOrder(String.valueOf(amountOfAttendeds.getText().toString()), String.valueOf(1));
-                                FirebaseDatabase.getInstance().getReference("Orders")
-                                        .child(fullDateWithTimeStamp)
-                                        .setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                reservations.put(fullDateWithTimeStamp, amountOfAttendeds.getText().toString());
+                                FirebaseDatabase.getInstance().getReference("Users")
+                                        .child(user.getUid())
+                                        .setValue(userLogged).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) { // if created the reservation use the successful activity -> fragment
-                                                    if (Integer.parseInt(amountOfAttendeds.getText().toString()) > 10) {
 
-                                                        startActivity(new Intent(getApplicationContext(), SuccessFailureActivity.class).putExtra("IsComplete", "false"));
-                                                    } else {
-                                                        User userLogged = User.getInstance();
-                                                        HashMap<String, String> reservations = userLogged.getReservations();
-                                                        reservations.put(fullDateWithTimeStamp, amountOfAttendeds.getText().toString());
-                                                        Order o = new Order();
-                                                        o.setAttendsNumber(amountOfAttendeds.getText().toString());
-                                                        o.setOrderDate(fullDateWithTimeStamp);
-
-                                                        FirebaseDatabase.getInstance().getReference("Users")
-                                                                .child(user.getUid()).child("reservations")
-                                                                .setValue(reservations).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                    @Override
-                                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                                    }
-                                                                });
-                                                        createNotificationChannel();
-                                                        setAlarmReminder(day, month, year, Integer.parseInt(timeFetched));
-                                                        startActivity(new Intent(getApplicationContext(), SuccessFailureActivity.class).putExtra("IsComplete", "true"));
-                                                    }
-                                                }
                                             }
                                         });
+                                createNotificationChannel();
+                                setAlarmReminder(day,month,year,Integer.parseInt(timeFetched));
+
+                                startActivity(new Intent(getApplicationContext(), SuccessFailureActivity.class).putExtra("IsComplete", "true"));
                             }
-                        }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
 
+                        } else { // first reservation for that date
+                            DbOrder order = new DbOrder(String.valueOf(amountOfAttendeds.getText().toString()), String.valueOf(1));
+                            FirebaseDatabase.getInstance().getReference("Orders")
+                                    .child(fullDateWithTimeStamp)
+                                    .setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) { // if created the reservation use the successful activity -> fragment
+                                                if (Integer.parseInt(amountOfAttendeds.getText().toString()) > 10) {
+
+                                                    startActivity(new Intent(getApplicationContext(), SuccessFailureActivity.class).putExtra("IsComplete", "false"));
+                                                } else {
+                                                    User userLogged = User.getInstance();
+                                                    HashMap<String, String> reservations = userLogged.getReservations();
+                                                    reservations.put(fullDateWithTimeStamp, amountOfAttendeds.getText().toString());
+                                                    Order o = new Order();
+                                                    o.setAttendsNumber(amountOfAttendeds.getText().toString());
+                                                    o.setOrderDate(fullDateWithTimeStamp);
+
+                                                    FirebaseDatabase.getInstance().getReference("Users")
+                                                            .child(user.getUid()).child("reservations")
+                                                            .setValue(reservations).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                }
+                                                            });
+                                                    createNotificationChannel();
+                                                    setAlarmReminder(day, month, year, Integer.parseInt(timeFetched));
+                                                    startActivity(new Intent(getApplicationContext(), SuccessFailureActivity.class).putExtra("IsComplete", "true"));
+                                                }
+                                            }
+                                        }
+                                    });
                         }
-                    });
-                } else { // the reservation date has passed
-                    Toast toast = Toast.makeText(getApplicationContext(), "Failed: Please choose valid time", Toast.LENGTH_SHORT);
-                    toast.show();
-                }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            } else { // the reservation date has passed
+                Toast toast = Toast.makeText(getApplicationContext(), "Failed: Please choose valid time", Toast.LENGTH_SHORT);
+                toast.show();
             }
         });
     }
@@ -263,7 +254,7 @@ public class NewReservationActivity extends AppCompatActivity implements Adapter
 
         String strHour =hour -3 <10 ? "0"+( hour -3) : (hour -3)+"";
         String ds = dateFetched+" "+strHour+":00";
-        LocalDateTime alertTime = LocalDateTime.parse(ds, DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
+        LocalDateTime alertTime = LocalDateTime.parse(ds, DateTimeFormatter.ofPattern("d-MM-yyyy HH:mm"));
         LocalDateTime now = LocalDateTime.now();
         Duration duration = Duration.between(now, alertTime);
         long diff = Math.abs(duration.toMillis());

@@ -78,8 +78,6 @@ public class OrderAdapter extends ListAdapter<Order, OrderAdapter.OrderViewHolde
                     itemView.setBackgroundColor(0x80FFFFFF);
                     itemView.findViewById(R.id.deleteBtn).setVisibility(View.VISIBLE);
                 }
-
-
         }
 
 

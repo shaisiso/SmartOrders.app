@@ -78,13 +78,6 @@ public class DialogFragment extends androidx.fragment.app.DialogFragment {
                 dismiss();
 
             });
-        }else if (action.equals("Exit")) {
-            title.setText("Close Application");
-            text.setText("Are you sure you want to close the application?");
-            submit.setText("Exit");
-            submit.setOnClickListener(v -> {
-                System.exit(1);
-            });
         }
 
         cancel.setOnClickListener(v -> {

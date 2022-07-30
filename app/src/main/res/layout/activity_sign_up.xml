@@ -10,8 +10,8 @@
         android:id="@+id/banner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
         android:layout_marginTop="50dp"
+        android:gravity="center"
         android:fontFamily="sans-serif-black"
         android:text="New Member"
         android:textAlignment="center"
@@ -23,7 +23,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/banner"
         android:layout_marginTop="60dp"
-        android:hint="Full Name" />
+        android:hint="Full Name"
+        android:inputType="textPersonName"
+        android:minHeight="48dp" />
 
     <EditText
         android:id="@+id/PhoneNumberET"
@@ -32,7 +34,8 @@
         android:layout_below="@+id/FullNameEt"
         android:layout_marginTop="20dp"
         android:hint="Phone Number"
-        android:inputType="number" />
+        android:inputType="number"
+        android:minHeight="48dp" />
 
     <EditText
         android:id="@+id/EmailEt"
@@ -41,7 +44,8 @@
         android:layout_below="@+id/PhoneNumberET"
         android:layout_marginTop="20dp"
         android:hint="Email"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:minHeight="48dp" />
 
 
     <EditText
@@ -51,7 +55,8 @@
         android:layout_below="@+id/EmailEt"
         android:layout_marginTop="20dp"
         android:hint="Password"
-        android:inputType="textPassword"/>
+        android:inputType="textPassword"
+        android:minHeight="48dp" />
 
     <Button
         android:id="@+id/newMemberbtn"

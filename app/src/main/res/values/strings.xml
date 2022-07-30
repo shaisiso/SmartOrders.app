@@ -3,7 +3,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="new_reservation_txt">We are happy that you want to eat with us! \nTo move forward with your reservation please choose the date you would like to order, the time and the amount of people you will be dining with!\n If there will be a place in the specific time the reservation will be created! \nIf no place found, don\'t worry, come back and choose another time!</string>
-    <string name="home_desc">Here you will be able to watch your full detailed reservation list, you will be able to delete a reservation that has not been yet, and create new one!\nAll the reservation are stored fat away so you don\'t have to worry about closing thee application\nIf you have a reservation that will come soon, at least three hours ahead, we will notify you about the reservation so you don\'t need to be worry at all!</string>
+    <string name="home_desc">Here you will be able to watch your full detailed reservation list, to delete a reservation that has not occurred yet, and create new one!\nAll the reservation are stored far away so you don\'t have to worry about closing thee application.\nIf you have a reservation that will come soon, we will notify you about the reservation 3 hours before, so you don\'t need to be worry at all!</string>
 
     <string-array name="hours">
         <item>Select:</item>
