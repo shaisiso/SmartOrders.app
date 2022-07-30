@@ -48,13 +48,14 @@ public class MyReservationsActivity extends AppCompatActivity implements OrderAd
         recyclerView.setAdapter(orderAdapter);
         // get view model instance -> pass list of reservations to recycle view adapter
         orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
-        orderViewModel.getOrderList().observe(this, orders -> orderAdapter.submitList(orders));
-
+        orderViewModel.getOrderList()
+                .observe(this, orders -> orderAdapter.submitList(orders));
         orderSwitch.setOnClickListener(view -> {
-            if(orderSwitch.isChecked())
-                orderViewModel.sortUp();
-            else
+            if (orderSwitch.isChecked())
                 orderViewModel.sortDown();
+            else
+                orderViewModel.sortUp();
+            orderAdapter.notifyDataSetChanged();
         });
 
     }

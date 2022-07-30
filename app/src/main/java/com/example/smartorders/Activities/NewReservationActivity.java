@@ -76,7 +76,7 @@ public class NewReservationActivity extends AppCompatActivity implements Adapter
         actionBar.setDisplayShowHomeEnabled(true);
 
         // find views from layout xml
-        chooseDateTV = findViewById(R.id.dateChosenET);
+//        chooseDateTV = findViewById(R.id.dateChosenET);
         chooseDateBtn = findViewById(R.id.chooseDateBtn);
         submitBtn = findViewById(R.id.submitReservationBtn);
         amountOfAttendeds = findViewById(R.id.numberOfPeopleET);
@@ -121,7 +121,8 @@ public class NewReservationActivity extends AppCompatActivity implements Adapter
                 String date = dayOfMonth + "-" + strMonth + "-" + year;
                 Log.i("Date", date);
                 dateFetched = date;
-                chooseDateTV.setText(dateFetched);
+             //   chooseDateTV.setText(dateFetched);
+                chooseDateBtn.setText(dateFetched);
 
             }
         };

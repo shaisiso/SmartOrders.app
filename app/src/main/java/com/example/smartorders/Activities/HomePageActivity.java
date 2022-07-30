@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -25,6 +26,7 @@ import com.example.smartorders.Dialog.DialogFragment;
 import com.example.smartorders.ForeGround.Service;
 import com.example.smartorders.ViewModel.OrderViewModel;
 import com.example.smartorders.R;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -76,9 +78,9 @@ public class HomePageActivity extends AppCompatActivity implements DialogFragmen
             startService(serviceIntent);
         }
 
-
         // initialize user class
         reference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Object value = snapshot.getValue();
@@ -107,18 +109,11 @@ public class HomePageActivity extends AppCompatActivity implements DialogFragmen
         });
 
         // new reservation btn clicked
-        newRes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getBaseContext(), NewReservationActivity.class));
-            }
-        });
-
+        newRes.setOnClickListener(v -> startActivity(new Intent(getBaseContext(), NewReservationActivity.class)));
 
         // show all reservations btn clicked
         allRes.setOnClickListener(v -> startActivity(new Intent(getBaseContext(),
                 MyReservationsActivity.class)));
-
     }
 
     // initialize option menu

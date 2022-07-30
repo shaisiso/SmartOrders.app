@@ -40,7 +40,6 @@ public class OrderAdapter extends ListAdapter<Order, OrderAdapter.OrderViewHolde
 
         TextView dateTextView, attendedTextView, hour;
         ImageButton deleteBtn;
-        Switch orderSwitch;
 
         // connect variables to xml, set on click method
         public OrderViewHolder(@NonNull View itemView) {
@@ -71,11 +70,15 @@ public class OrderAdapter extends ListAdapter<Order, OrderAdapter.OrderViewHolde
             attendedTextView.setText(order.getAttendsNumber());
             LocalDateTime orderDate = order.getOrderLocalDate(order);
             LocalDateTime now = LocalDateTime.now();
+                if (orderDate.compareTo(now) < 0) {
+                    itemView.setBackgroundColor(Color.DKGRAY);
+                    itemView.findViewById(R.id.deleteBtn).setVisibility(View.INVISIBLE);
+                }
+                else{
+                    itemView.setBackgroundColor(0x80FFFFFF);
+                    itemView.findViewById(R.id.deleteBtn).setVisibility(View.VISIBLE);
+                }
 
-                if (orderDate.compareTo(now) < 0)
-                    itemView.setBackgroundColor(Color.GRAY);
-                else
-                    itemView.setBackgroundColor(0x0);
 
         }
 

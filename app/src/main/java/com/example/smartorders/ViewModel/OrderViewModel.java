@@ -17,6 +17,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class OrderViewModel extends ViewModel {
     private User userRef;
     private String userId;
     boolean dateAscending=true;
+
     public LiveData<List<Order>> getOrderList() {
         if (mutableLiveData == null) {
             user = FirebaseAuth.getInstance().getCurrentUser();
@@ -63,13 +65,7 @@ public class OrderViewModel extends ViewModel {
                                 }
                             }
                         }
-                        //if(dateAscending)
-                            ordersList.sort(Order::compareTo);
-//                        else{
-//                            ordersList.sort((o1, o2) -> o1.compareTo(o2) * (-1));
-//                        }
-                        //ordersList.sort((o1,o2)-> o1.compareTo(o2)*(-1));
-
+                        ordersList.sort(Comparator.reverseOrder());
                         mutableLiveData.setValue(ordersList);
                     }
 
@@ -88,7 +84,7 @@ public class OrderViewModel extends ViewModel {
     public void sortUp() {
         dateAscending =false;
         List<Order> orders = new ArrayList<>(mutableLiveData.getValue());
-        orders.sort((o1, o2) -> o1.compareTo(o2) * (-1));
+        orders.sort(Comparator.reverseOrder());
         mutableLiveData.setValue(orders);
     }
 
