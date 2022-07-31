@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/res"
+    android:background="@drawable/background"
     tools:context=".Activities.HomePageActivity">
 
     <LinearLayout
@@ -35,6 +35,7 @@
             android:textColor="#F0FFFFFF"
             android:textSize="18dp"
             />
+
     </LinearLayout>
 
 

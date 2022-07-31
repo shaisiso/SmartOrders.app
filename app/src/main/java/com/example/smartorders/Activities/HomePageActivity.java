@@ -61,6 +61,7 @@ public class HomePageActivity extends AppCompatActivity implements DialogFragmen
         actionBar = getSupportActionBar();
         actionBar.setTitle("Home");
 
+
         // find views from layout xml
         newRes = findViewById(R.id.newReservationBtn);
         allRes = findViewById(R.id.allReservationButtons);
